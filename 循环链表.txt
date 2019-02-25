@@ -1,0 +1,144 @@
+'''单向循环链表'''
+
+
+class Node():
+    '''节点'''
+
+    def __init__(self, item):
+        self.item = item
+        self.next = None
+
+
+class SinCycLinkedList():
+    '''单循环链表'''
+
+    def __init__(self):
+        self._head = None
+
+
+    def is_empty(self):
+        '''判断链表非空'''
+        return self._head == None
+
+    def length(self):
+        '''返回链表长度'''
+        if self.is_empty():
+            return 0
+        cur = self._head
+        count = 1
+        while cur.next != self._head:
+            count += 1
+            cur = cur.next
+        return count
+
+    def travel(self):
+        '''遍历链表'''
+        if self.is_empty():
+            return
+        cur = self._head
+
+        while cur.next != self._head:
+            print(cur.item)
+            cur = cur.next
+        print(cur.item)
+
+    def add(self, item):
+        '''头部添加节点'''
+        node = Node(item)
+        if self.is_empty():
+            self._head = node
+            self._head.next = self._head
+        else:
+            cur = self._head
+            node.next = self._head
+            while cur.next != self._head:
+                cur = cur.next
+            cur.next = node
+            self._head = node
+
+    def append(self, item):
+        '''尾部添加节点'''
+        node = Node(item)
+        if self.is_empty():
+            self._head = node
+            self._head.next = self._head
+        else:
+            cur = self._head
+            while cur.next != self._head:
+                cur = cur.next
+            node.next = self._head
+            cur.next = node
+
+    def insert_1(self, pos, item):
+        '''在指定位置插入节点（插入的节点是链表中的第pos个,可读性更佳）'''
+        if pos <= 1:
+            self.add(item)
+        elif pos > self.length():
+            self.append(item)
+        else:
+            node = Node(item)
+            cur = self._head
+            count = 1
+            while count != pos - 1:
+                cur = cur.next
+                count += 1
+            node.next = cur.next
+            cur.next = node
+
+    def remove(self, item):
+        '''删除链表中第一个值为item的节点'''
+        if self.is_empty():
+            return
+        cur = self._head
+        # head节点为要删除节点
+        if cur.item == item:
+            # 链表中只有head节点
+            if cur.next == self._head:
+                self._head = None
+            else:
+                # 找到head的前继节点
+                while cur.next != self._head:
+                    cur = cur.next
+                cur.next = self._head.next
+                self._head = self._head.next
+        else:
+            pre = self._head
+            while cur.next != self._head:
+                if cur.item == item:
+                    pre.next = cur.next
+                else:
+                    pre = cur
+                    cur = cur.next
+            # 删除尾节点
+            if cur.item == item:
+                pre.next = cur.next
+
+    def search(self, item):
+        '''在链表中查找值为item的节点，查到则返回TRUE'''
+        if self.is_empty():
+            return False
+        cur = self._head
+        while cur.next != self._head:
+            if cur.item == item:
+                return True
+            else:
+                cur = cur.next
+        if cur.item == item:
+            return True
+        return False
+
+
+L1 = SinCycLinkedList()
+L1.append(17)
+# L1.add(10)
+# L1.add(12)
+# L1.add(14)
+L1.append(26)
+L1.insert_1(1, 39)
+print(L1.is_empty())
+L1.remove(39)
+L1.travel()
+print(L1.search(18))
+# print(L1.is_empty())
+# print(L1._head.item)
+# print(L1._head.next.next.item)

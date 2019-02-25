@@ -1,0 +1,138 @@
+'''单链表及其常见操作'''
+
+
+class Node():
+    '''节点'''
+
+    def __init__(self, item):
+        self.item = item
+        self.next = None
+
+
+class SingleLinkedList():
+    '''单链表'''
+
+    def __init__(self):
+        self._head = None
+
+    def is_empty(self):
+        '''判断链表非空'''
+        return self._head == None
+
+    def length(self):
+        '''返回链表长度'''
+
+        if self.is_empty():
+            return 0
+        cur = self._head
+        count = 1
+        while cur.next != None:
+            count += 1
+            cur = cur.next
+        return count
+
+    def travel(self):
+        '''遍历链表'''
+        cur = self._head
+        while cur != None:
+            print(cur.item)
+            cur = cur.next
+
+    def add(self, item):
+        '''头部添加节点'''
+        node = Node(item)
+        node.next = self._head
+        self._head = node
+
+    def append(self, item):
+        '''尾部添加节点'''
+        node = Node(item)
+        if self.is_empty():
+            self._head = node
+        else:
+            cur = self._head
+            while cur.next != None:
+                cur = cur.next
+            cur.next = node
+
+    def insert(self, pos, item):
+        '''在指定位置（下标为pos处）添加节点,链表首节点下标为0，可读性较差'''
+        if pos <= 0:
+            self.add(item)
+            # 若指定位置超过链表尾部，则执行尾部插入
+        elif pos > (self.length() - 1):
+            self.append(item)
+            # 找到指定位置
+        else:
+            node = Node(item)
+            count = 0
+            # pre用来指向指定位置pos的前一个位置pos-1，初始从头节点开始移动到指定位置
+            pre = self._head
+            while count < (pos - 1):
+                count += 1
+                pre = pre.next
+            # 先将新节点node的next指向插入位置的节点
+            node.next = pre.next
+            # 将插入位置的前一个节点的next指向新节点
+            pre.next = node
+
+    def insert_1(self, pos, item):
+        '''在指定位置插入节点（插入的节点是链表中的第pos个,可读性更佳）'''
+        if pos <= 1:
+            self.add(item)
+        elif pos > self.length():
+            self.append(item)
+            # 找到指定位置
+        else:
+            node = Node(item)
+            count = 1
+            cur = self._head
+            while count != (pos - 1):
+                count += 1
+                cur = cur.next
+            node.next = cur.next
+            cur.next = node
+
+    def remove(self, item):
+        '''删除链表中第一个值为item的节点'''
+        if self.is_empty():
+            return
+        cur = self._head
+        pre = None
+        while cur != None:
+            if cur.item == item:
+                if pre == None:
+                    self._head = cur.next
+                else:
+                    pre.next = cur.next
+                break
+            else:
+                pre = cur
+                cur = cur.next
+
+    def search(self, item):
+        '''在链表中查找值为item的节点，查到则返回TRUE'''
+        cur = self._head
+        while cur != None:
+            if cur.item == item:
+                return True
+            else:
+                cur = cur.next
+        return False
+
+
+list0 = SingleLinkedList()
+list0.add(5)
+list0.append(8)
+list0.append(9)
+list0.append(12)
+list0.append(88)
+list0.append(85)
+list0.append(82)
+list0.insert_1(7, 88)
+print(list0.length())
+list0.travel()
+print(list0.search(5))
+list0.remove(5)
+print(list0.search(5))
+list0.travel()

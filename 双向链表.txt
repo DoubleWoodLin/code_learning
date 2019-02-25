@@ -1,0 +1,138 @@
+'''双向链表'''
+
+
+class Node():
+    '''节点'''
+
+    def __init__(self, item):
+        self.item = item
+        self.next = None
+        self.prev = None
+
+
+class DouLink_list():
+    '''双向链表'''
+
+    def __init__(self):
+        self._head = None
+
+    def is_empty(self):
+        return self._head == None
+
+    def add(self, item):
+        '''头部添加节点'''
+        node = Node(item)
+        if self.is_empty():
+            self._head = node
+        else:
+            node = Node(item)
+            node.next = self._head
+            self._head.prev = node
+            self._head = node
+
+    def append(self, item):
+        '''尾部添加节点'''
+        node = Node(item)
+        if self.is_empty():
+            self._head = node
+        else:
+            node = Node(item)
+            cur = self._head
+            while cur.next != None:
+                cur = cur.next
+            cur.next = node
+            node.prev = cur
+
+    def length(self):
+        count = 0
+        cur = self._head
+        while cur != None:
+            count += 1
+            cur = cur.next
+        return count
+
+    def travel(self):
+        if self.is_empty():
+            return
+        else:
+            cur = self._head
+            while cur != None:
+                print(cur.item)
+                cur=cur.next
+
+    def insert(self, pos, item):
+        if pos <= 1:
+            self.add(item)
+        elif pos > self.length():
+            self.append(item)
+        else:
+            node = Node(item)
+            cur = self._head
+            count = 1
+            while count != pos - 1:
+                count += 1
+                cur = cur.next
+            node.next = cur.next
+            cur.next.prev = node
+            cur.next = node
+            node.prev = cur
+
+    def remove(self, item):
+        if self.is_empty():
+            return
+        cur = self._head
+        if cur.item == item:
+            if cur.next == None:
+                self._head = None
+            else:
+                cur.next.prev = None
+                self._head = cur.next
+            return
+        while cur.next != None:
+            if cur.item == item:
+                cur.prev.next = cur.next
+                cur.next.prev = cur.prev
+                return
+            else:
+                cur = cur.next
+            if cur.item == item:
+                cur.prev.next = cur.next
+
+    def search(self, item):
+        '''返回值为item的节点'''
+        if self.is_empty():
+            return
+        cur = self._head
+        while cur != None:
+            if cur.item == item:
+                return cur
+            else:
+                cur = cur.next
+        return
+
+    def remove_1(self, _node):
+        '''删除_node节点'''
+        if self.is_empty():
+            return
+        cur = self._head
+        if cur == _node:
+            if cur.next == None:
+                self._head = None
+            else:
+                cur.next.prev = None
+                self._head = cur.next
+        _node.prev.next = _node.next
+        if _node.next != None:
+            _node.next.prev = _node.prev
+
+
+L1 = DouLink_list()
+print(L1.is_empty())
+L1.add(5)
+L1.add(6)
+nod = L1.search(5)
+print(nod)
+L1.travel()
+L1.remove_1(nod)
+L1.travel()
+print(L1.is_empty())
